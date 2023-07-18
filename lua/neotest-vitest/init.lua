@@ -13,42 +13,6 @@ local util = require("neotest-vitest.util")
 ---@type neotest.Adapter
 local adapter = { name = "neotest-vitest" }
 
----@param path string
----@return boolean
-local function hasVitestDependency(path)
-  local rootPath = lib.files.match_root_pattern("package.json")(path)
-
-  if not rootPath then
-    return false
-  end
-
-  local success, packageJsonContent = pcall(lib.files.read, rootPath .. "/package.json")
-  if not success then
-    print("cannot read package.json")
-    return false
-  end
-
-  local parsedPackageJson = vim.json.decode(packageJsonContent)
-
-  if parsedPackageJson["dependencies"] then
-    for key, _ in pairs(parsedPackageJson["dependencies"]) do
-      if key == "vitest" then
-        return true
-      end
-    end
-  end
-
-  if parsedPackageJson["devDependencies"] then
-    for key, _ in pairs(parsedPackageJson["devDependencies"]) do
-      if key == "vitest" then
-        return true
-      end
-    end
-  end
-
-  return false
-end
-
 adapter.root = function(path)
   return lib.files.match_root_pattern("package.json")(path)
 end
@@ -78,7 +42,7 @@ function adapter.is_test_file(file_path)
     end
   end
   ::matched_pattern::
-  return is_test_file and hasVitestDependency(file_path)
+  return is_test_file
 end
 
 ---@async
