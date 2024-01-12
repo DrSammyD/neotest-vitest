@@ -102,14 +102,7 @@ end
 ---@param path string
 ---@return string
 local function getVitestCommand(path)
-  local rootPath = util.find_node_modules_ancestor(path)
-  local vitestBinary = util.path.join(rootPath, "node_modules", ".bin", "vitest")
-
-  if util.path.exists(vitestBinary) then
-    return vitestBinary
-  end
-
-  return "vitest"
+  return "bunx vitest"
 end
 
 local vitestConfigPattern = util.root_pattern("vitest.config.{js,ts}")
@@ -200,12 +193,7 @@ function adapter.build_spec(args)
   end
 
   local binary = getVitestCommand(pos.path)
-  local config = getVitestConfig(pos.path) or "vitest.config.ts"
   local command = vim.split(binary, "%s+")
-  if util.path.exists(config) then
-    -- only use config if available
-    table.insert(command, "--config=" .. config)
-  end
 
   vim.list_extend(command, {
     "--run",
