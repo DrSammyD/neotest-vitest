@@ -200,7 +200,7 @@ function adapter.build_spec(args)
   end
 
   local binary = getVitestCommand(pos.path)
-  local config = getVitestConfig(pos.path) or "vitest.config.js"
+  local config = getVitestConfig(pos.path) or "vitest.config.ts"
   local command = vim.split(binary, "%s+")
   if util.path.exists(config) then
     -- only use config if available
